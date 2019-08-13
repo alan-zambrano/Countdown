@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JavaScript Clock</title>
+	<script src = "../node_modules/jquery/dist/jquery.min.js"></script>
+	<script src = "./countdown.js"></script>
+	<link rel = "stylesheet" href = "./countdown.css">
+
+</head>
+<body>
+	<div style = "text-align: center">
+		<span id = "clock">00:00:00</span>
+	</div>
+	<form>
+		Hours: <input type = "number" min = "0" value = "0" id = "fhours"> <br>
+		Minutes: <input type = "number" min = "0" max = "60" value = "0" id = "fminutes"> <br>
+		Seconds: <input type = "number" min = "0" max = "60" value = "0" id = "fseconds"> <br>
+		<input type = "button" value = "Start" id = "fstart">
+		<input type = "button" value = "Pause" id = "fpause">
+		<input type = "button" value = "Resume" id = "fresume" disabled>
+
+	</form>
+</body>
+</html>
