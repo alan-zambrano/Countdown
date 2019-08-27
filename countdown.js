@@ -2,6 +2,20 @@ let TIMER_ID = null;
 let CLOCK_HOURS;
 let CLOCK_MINUTES;
 let CLOCK_SECONDS;
+let INTERVAL_NODE;
+
+function getNextInterval(){
+	//find the next valid time interval
+	for(INTERVAL_NODE = INTERVAL_NODE.next(); INTERVAL_NODE.length != 0; INTERVAL_NODE = INTERVAL_NODE.next()){
+		if(checkValidInput(INTERVAL_NODE.children(".iHours").val()) != "0" ||
+		   checkValidInput(INTERVAL_NODE.children(".iMinutes").val()) != "0" ||
+		   checkValidInput(INTERVAL_NODE.children(".iSeconds").val()) != "0"){
+			return true;
+		}
+	}
+	//no further intervals exist
+	return false;
+}
 
 function startCountdown(hours, minutes, seconds){
 	//Pad minutes, hours, and seconds with zeros if necessary
@@ -9,44 +23,42 @@ function startCountdown(hours, minutes, seconds){
 	CLOCK_MINUTES = minutes < 10 ? "0" + minutes : minutes;
 	CLOCK_SECONDS = seconds < 10 ? "0" + seconds : seconds;
 
-	//format and print the time
-	let combined = CLOCK_HOURS + ":" + CLOCK_MINUTES + ":" + CLOCK_SECONDS;
-	$("#clock").html(combined);
+	//update the HTML
+	$("#clock").html(CLOCK_HOURS + ":" + CLOCK_MINUTES + ":" + CLOCK_SECONDS);
 
+	//casting to int to preserve formatting
 	CLOCK_HOURS = parseInt(CLOCK_HOURS);
 	CLOCK_MINUTES = parseInt(CLOCK_MINUTES);
 	CLOCK_SECONDS = parseInt(CLOCK_SECONDS);
 
 	//change time for the next iteration
-	let nextSeconds = CLOCK_SECONDS - 1;
-	let nextMinutes = CLOCK_MINUTES;
-	let nextHours = CLOCK_HOURS;
+	CLOCK_SECONDS--;
 
-	if(nextSeconds < 0){
-		nextSeconds += 60;
-		nextMinutes -= 1;
-		if(nextMinutes < 0){
-			nextMinutes += 60;
-			nextHours -= 1;
-			if(nextHours < 0){
-				TIMER_ID = null;
-				return;
+	//percolate up from seconds, updating minutes and hours
+	if(CLOCK_SECONDS < 0){
+		CLOCK_SECONDS += 60;
+		CLOCK_MINUTES -= 1;
+		if(CLOCK_MINUTES < 0){
+			CLOCK_MINUTES += 60;
+			CLOCK_HOURS -= 1;
+			if(CLOCK_HOURS < 0){
+				//when time's up, move to the next valid interval, update clock
+				if(getNextInterval()){
+					CLOCK_HOURS = checkValidInput(INTERVAL_NODE.children(".iHours").val());
+					CLOCK_MINUTES = checkValidInput(INTERVAL_NODE.children(".iMinutes").val());
+					CLOCK_SECONDS = checkValidInput(INTERVAL_NODE.children(".iSeconds").val());
+				}
+				else{
+					TIMER_ID = null;
+					return;
+				}
 			}
 		}
 	}
-
-	TIMER_ID = setTimeout(startCountdown, 1000, nextHours, nextMinutes, nextSeconds);
+	TIMER_ID = setTimeout(startCountdown, 1000, CLOCK_HOURS, CLOCK_MINUTES, CLOCK_SECONDS);
 }
 
 function resumeClock(){
-/*
-	currTime = $("#clock").html();
-	currTime = currTime.split(":");
-
-	let hours = parseInt(currTime[0]);
-	let minutes = parseInt(currTime[1]);
-	let seconds = parseInt(currTime[2]);
-*/	
 	startCountdown(CLOCK_HOURS, CLOCK_MINUTES, CLOCK_SECONDS);
 
 	$("#fresume").attr("disabled", true);
@@ -61,9 +73,12 @@ function pauseClock(){
 	$("#fresume").attr("disabled", false);
 }
 
+//checks for:
+// empty string
+// values outside of valid range (0-60)
 function checkValidInput(time){
 	if(time == "")
-		return "0";
+		return 0;
 	else if(time > 60)
 		return 60;
 	else if(time < 0)
@@ -78,11 +93,14 @@ function startClock(){
 		clearTimeout(TIMER_ID);
 		TIMER_ID = null;
 	}
+	//sets INTERVAL_NODE to the first interval
+	INTERVAL_NODE = $("#intervalTop").children().first();
 
-	let CLOCK_HOURS = checkValidInput($("#fhours").val());
-	let CLOCK_MINUTES = checkValidInput($("#fminutes").val());
-	let CLOCK_SECONDS = checkValidInput($("#fseconds").val());
-
+	//sets global time to that in the first hr/min/sec textbox interval
+	CLOCK_HOURS = checkValidInput(INTERVAL_NODE.children(".iHours").val());
+	CLOCK_MINUTES = checkValidInput(INTERVAL_NODE.children(".iMinutes").val());
+	CLOCK_SECONDS = checkValidInput(INTERVAL_NODE.children(".iSeconds").val());
+	
 	startCountdown(CLOCK_HOURS, CLOCK_MINUTES, CLOCK_SECONDS);
 }
 
@@ -90,8 +108,8 @@ function main(){
 	$("#fstart").click(startClock);
 	$("#fpause").click(pauseClock);
 	$("#fresume").click(resumeClock);
-	
 }
+
 $(document).ready(function(){
 	main();
 });

@@ -8,3 +8,9 @@
 	text-align: center;
 	display: inline-block;
 }
+
+.intervalInput{
+	margin: 2px;
+	border: 1px solid blue;
+	background-color: green;
+}
