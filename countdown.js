@@ -4,6 +4,13 @@ let CLOCK_MINUTES;
 let CLOCK_SECONDS;
 let INTERVAL_NODE;
 
+
+function nonzeroInterval(){
+	return checkValidInput(INTERVAL_NODE.children(".iHours").val()) != "0" ||
+		   checkValidInput(INTERVAL_NODE.children(".iMinutes").val()) != "0" ||
+		   checkValidInput(INTERVAL_NODE.children(".iSeconds").val()) != "0";
+}
+
 function getNextInterval(){
 	//find the next valid time interval
 	for(INTERVAL_NODE = INTERVAL_NODE.next(); INTERVAL_NODE.length != 0; INTERVAL_NODE = INTERVAL_NODE.next()){
@@ -16,7 +23,9 @@ function getNextInterval(){
 	//no further intervals exist
 	return false;
 }
-
+function printClock(str){
+	$("#clock").html(str);
+}
 function startCountdown(hours, minutes, seconds){
 	//Pad minutes, hours, and seconds with zeros if necessary
 	CLOCK_HOURS = hours < 10 ? "0" + hours : hours;
@@ -35,7 +44,7 @@ function startCountdown(hours, minutes, seconds){
 	CLOCK_SECONDS--;
 
 	//percolate up from seconds, updating minutes and hours
-	if(CLOCK_SECONDS < 0){
+	if(CLOCK_SECONDS < 1){
 		CLOCK_SECONDS += 60;
 		CLOCK_MINUTES -= 1;
 		if(CLOCK_MINUTES < 0){
@@ -49,6 +58,7 @@ function startCountdown(hours, minutes, seconds){
 					CLOCK_SECONDS = checkValidInput(INTERVAL_NODE.children(".iSeconds").val());
 				}
 				else{
+					setTimeout(printClock, 1000, "00:00:00");
 					TIMER_ID = null;
 					return;
 				}
@@ -95,6 +105,7 @@ function startClock(){
 	}
 	//sets INTERVAL_NODE to the first interval
 	INTERVAL_NODE = $("#intervalTop").children().first();
+	if(!nonzeroInterval()) getNextInterval();
 
 	//sets global time to that in the first hr/min/sec textbox interval
 	CLOCK_HOURS = checkValidInput(INTERVAL_NODE.children(".iHours").val());
