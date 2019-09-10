@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>JavaScript Clock</title>
-	
+
 	<script src = "../node_modules/jquery/dist/jquery.min.js"></script>
 	<script src = "./countdown.js"></script>
 	<link rel = "stylesheet" href = "./countdown.css">
@@ -10,7 +10,6 @@
 </head>
 <body>
 	<div style = "text-align: center">
-		Interval <span id = "intNumber">1</span> <br>
 		<span id = "clock">00:00:00</span>
 	</div>
 	<form id = "intervalTop">
@@ -20,21 +19,21 @@
 			Minutes: <input type = "number" min = "0" max = "60" value = "0" class = "iMinutes"> <br>
 			Seconds: <input type = "number" min = "0" max = "60" value = "0" class = "iSeconds">
 		</div>
-		
+
 		<div class = "intervalInput">
 			Interval 2: <br>
 			Hours: <input type = "number" min = "0" max = "60"value = "0" class = "iHours"> <br>
 			Minutes: <input type = "number" min = "0" max = "60" value = "0" class = "iMinutes"> <br>
 			Seconds: <input type = "number" min = "0" max = "60" value = "0" class = "iSeconds"> <br>
 		</div>
-		
+
 		<div class = "intervalInput">
 			Interval 3: <br>
 			Hours: <input type = "number" min = "0" max = "60"value = "0" class = "iHours"> <br>
 			Minutes: <input type = "number" min = "0" max = "60" value = "0" class = "iMinutes"> <br>
 			Seconds: <input type = "number" min = "0" max = "60" value = "0" class = "iSeconds"> <br>
 		</div>
-	
+
 		<div class = "intervalInput">
 			Interval 4: <br>
 			Hours: <input type = "number" min = "0" max = "60"value = "0" class = "iHours"> <br>
@@ -42,11 +41,12 @@
 			Seconds: <input type = "number" min = "0" max = "60" value = "0" class = "iSeconds"> <br>
 		</div>
 	</form>
-	
+
 	<form id = "intButtons">
 		<input type = "button" value = "Start" id = "fstart">
 		<input type = "button" value = "Pause" id = "fpause">
 		<input type = "button" value = "Resume" id = "fresume" disabled> <br>
+		Restart when done: <input type = "checkbox" id = "frestart">
 	</form>
 </body>
 </html>
